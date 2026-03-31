@@ -7,4 +7,11 @@ skills:
     path: skills/paper-revision
     owner: mtl-omen-desktop
     last_updated: 2026-03-31
-
+  - id: multi-client-collaboration
+    title: Multi-Client Collaboration
+    tags: [coordination, worktree, handoff, context]
+    status: tested
+    summary: Coordinate shared work across Codex sessions and worktrees using one canonical CONTEXT.md.
+    path: skills/multi-client-collaboration
+    owner: mtl-omen-desktop
+    last_updated: 2026-03-31
