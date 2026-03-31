@@ -35,7 +35,7 @@ EOF
 
 skill_exists() {
   local skill_name="$1"
-  [[ -d "$SOURCE_DIR/$skill_name" ]]
+  [[ -n "$(registry_get_field "$skill_name" "path")" ]]
 }
 
 registry_has_skill() {
@@ -92,11 +92,21 @@ registry_ids_by_status() {
 
 install_one() {
   local skill_name="$1"
-  local source_path="$SOURCE_DIR/$skill_name"
+  local registry_path
+  local source_path
   local target_path="$TARGET_DIR/$skill_name"
 
+  registry_path="$(registry_get_field "$skill_name" "path")"
+
+  if [[ -z "$registry_path" ]]; then
+    echo "Skill not found in registry: $skill_name" >&2
+    exit 1
+  fi
+
+  source_path="$REPO_DIR/$registry_path"
+
   if [[ ! -d "$source_path" ]]; then
-    echo "Skill not found: $skill_name" >&2
+    echo "Skill path not found: $skill_name -> $registry_path" >&2
     exit 1
   fi
 
@@ -140,24 +150,8 @@ show_info() {
 
 validate_skills() {
   local failed=0
-  local skill_dir
   local skill_name
   local path
-
-  for skill_dir in "$SOURCE_DIR"/*; do
-    [[ -d "$skill_dir" ]] || continue
-    skill_name="$(basename "$skill_dir")"
-
-    if [[ ! -f "$skill_dir/SKILL.md" ]]; then
-      echo "Missing SKILL.md: skills/$skill_name" >&2
-      failed=1
-    fi
-
-    if ! registry_has_skill "$skill_name"; then
-      echo "Missing registry entry: $skill_name" >&2
-      failed=1
-    fi
-  done
 
   while IFS= read -r skill_name; do
     path="$(registry_get_field "$skill_name" "path")"
@@ -170,6 +164,12 @@ validate_skills() {
 
     if [[ ! -d "$REPO_DIR/$path" ]]; then
       echo "Registry path does not exist: $skill_name -> $path" >&2
+      failed=1
+      continue
+    fi
+
+    if [[ ! -f "$REPO_DIR/$path/SKILL.md" ]]; then
+      echo "Missing SKILL.md: $path" >&2
       failed=1
     fi
   done < <(registry_ids)
