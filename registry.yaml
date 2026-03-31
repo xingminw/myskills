@@ -1,0 +1,10 @@
+skills:
+  - id: paper-revision
+    title: Paper Revision
+    tags: [writing, paper, editing, research]
+    status: draft
+    summary: Revise academic papers for clarity, structure, and reviewer response.
+    path: skills/paper-revision
+    owner: mtl-omen-desktop
+    last_updated: 2026-03-31
+

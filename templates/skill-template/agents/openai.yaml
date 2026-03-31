@@ -1,0 +1,4 @@
+version: 1
+display_name: My Skill
+short_description: Starter metadata for a new skill.
+default_prompt: Help with the workflow described by this skill.

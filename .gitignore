@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.bak
+
+# Local scratch space
+tmp/
+dist/
+
+# Python helpers
+__pycache__/
+*.pyc
