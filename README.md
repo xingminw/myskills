@@ -49,12 +49,21 @@ This repo includes a small CLI in `install.sh` for installing and managing skill
 ```bash
 ./install.sh list
 ./install.sh list --status draft
+./install.sh list-installed
 ```
 
 ### Show skill metadata
 
 ```bash
 ./install.sh info paper-revision
+```
+
+### Show management status
+
+Compare repo-managed skills against the global install directory:
+
+```bash
+./install.sh status
 ```
 
 ### Validate the repo
@@ -92,10 +101,37 @@ Install by status from `registry.yaml`:
 ./install.sh install --status draft
 ```
 
+### View installed global skills
+
+This reads the actual global Codex skills directory `~/.codex/skills` and labels each installed skill as:
+
+- `managed`: known in this repo's `registry.yaml`
+- `unmanaged`: installed globally but not tracked by this repo
+
+```bash
+./install.sh list-installed
+```
+
+### Uninstall installed skills
+
+Remove one or more installed skills from `~/.codex/skills`:
+
+```bash
+./install.sh uninstall paper-revision
+./install.sh uninstall paper-revision some-other-skill
+```
+
+Remove all globally installed skills that are managed by this repo:
+
+```bash
+./install.sh uninstall --all-managed
+```
+
 ### Notes
 
 - Running `./install.sh` with no arguments defaults to installing all registered skills.
 - Install is overwrite-based for the target skill folder in `~/.codex/skills`.
+- Uninstall removes folders from `~/.codex/skills`.
 - `registry.yaml` is the inventory used for listing, info, and status-based install.
 
 ## Suggested Workflow

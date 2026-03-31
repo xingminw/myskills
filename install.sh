@@ -13,19 +13,27 @@ usage() {
   cat <<'EOF'
 Usage:
   ./install.sh list [--status STATUS]
+  ./install.sh list-installed
   ./install.sh info <skill>
+  ./install.sh status
   ./install.sh validate
   ./install.sh install [--all] [--status STATUS] [skill...]
+  ./install.sh uninstall [skill...]
+  ./install.sh uninstall --all-managed
   ./install.sh help
 
 Examples:
   ./install.sh list
   ./install.sh list --status draft
+  ./install.sh list-installed
   ./install.sh info paper-revision
+  ./install.sh status
   ./install.sh validate
   ./install.sh install paper-revision
   ./install.sh install --status stable
   ./install.sh install --all
+  ./install.sh uninstall paper-revision
+  ./install.sh uninstall --all-managed
 
 Notes:
   - Running with no arguments defaults to: ./install.sh install --all
@@ -115,6 +123,15 @@ install_one() {
   echo "Installed $skill_name -> $target_path"
 }
 
+installed_skill_ids() {
+  local skill_dir
+  for skill_dir in "$TARGET_DIR"/*; do
+    [[ -d "$skill_dir" ]] || continue
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    basename "$skill_dir"
+  done
+}
+
 list_skills() {
   local status_filter="${1:-}"
   local skill_name
@@ -137,6 +154,24 @@ list_skills() {
   done
 }
 
+list_installed_skills() {
+  local installed_name
+  local count=0
+
+  for installed_name in $(installed_skill_ids); do
+    count=1
+    if registry_has_skill "$installed_name"; then
+      printf '%s [managed]\n' "$installed_name"
+    else
+      printf '%s [unmanaged]\n' "$installed_name"
+    fi
+  done
+
+  if [[ "$count" -eq 0 ]]; then
+    echo "No installed skills found in $TARGET_DIR"
+  fi
+}
+
 show_info() {
   local skill_name="$1"
 
@@ -146,6 +181,25 @@ show_info() {
   fi
 
   registry_print_block "$skill_name"
+}
+
+show_status() {
+  local skill_name
+  local installed=0
+
+  while IFS= read -r skill_name; do
+    [[ -n "$skill_name" ]] || continue
+    if [[ -d "$TARGET_DIR/$skill_name" ]]; then
+      printf '%s [installed]\n' "$skill_name"
+      installed=1
+    else
+      printf '%s [not installed]\n' "$skill_name"
+    fi
+  done < <(registry_ids)
+
+  if [[ "$installed" -eq 0 ]]; then
+    :
+  fi
 }
 
 validate_skills() {
@@ -206,6 +260,36 @@ install_by_status() {
   fi
 }
 
+uninstall_one() {
+  local skill_name="$1"
+  local target_path="$TARGET_DIR/$skill_name"
+
+  if [[ ! -d "$target_path" ]]; then
+    echo "Installed skill not found: $skill_name" >&2
+    exit 1
+  fi
+
+  rm -rf "$target_path"
+  echo "Removed $skill_name from $target_path"
+}
+
+uninstall_all_managed() {
+  local skill_name
+  local found=0
+
+  while IFS= read -r skill_name; do
+    [[ -n "$skill_name" ]] || continue
+    if [[ -d "$TARGET_DIR/$skill_name" ]]; then
+      uninstall_one "$skill_name"
+      found=1
+    fi
+  done < <(registry_ids)
+
+  if [[ "$found" -eq 0 ]]; then
+    echo "No managed installed skills found in $TARGET_DIR"
+  fi
+}
+
 main() {
   local command="${1:-install}"
 
@@ -227,10 +311,16 @@ main() {
         list_skills
       fi
       ;;
+    list-installed)
+      list_installed_skills
+      ;;
     info)
       shift
       [[ $# -ge 1 ]] || { echo "Missing skill name." >&2; exit 1; }
       show_info "$1"
+      ;;
+    status)
+      show_status
       ;;
     validate)
       validate_skills
@@ -255,6 +345,19 @@ main() {
 
       for skill_name in "$@"; do
         install_one "$skill_name"
+      done
+      ;;
+    uninstall)
+      shift
+      [[ $# -ge 1 ]] || { echo "Missing uninstall target." >&2; exit 1; }
+
+      if [[ "${1:-}" == "--all-managed" ]]; then
+        uninstall_all_managed
+        exit 0
+      fi
+
+      for skill_name in "$@"; do
+        uninstall_one "$skill_name"
       done
       ;;
     *)
