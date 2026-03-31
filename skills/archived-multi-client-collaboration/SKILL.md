@@ -1,9 +1,9 @@
 ---
-name: multi-client-collaboration
-description: "Use when work is split across multiple Codex CLI sessions, worktrees, or handoff-style threads and a shared manual coordination protocol is needed. This skill defines the default, simplest collaboration mode: one canonical CONTEXT.md in the main repo folder, with all clients reading and updating it for durable shared state."
+name: archived-multi-client-collaboration
+description: "Archived record of an earlier collaboration skill. Keep for reference only rather than active use."
 ---
 
-# Multi-Client Collaboration
+# Archived Multi-Client Collaboration
 
 Use this skill when the user is coordinating work across multiple CLI sessions, multiple worktrees, or multiple threads that need a shared manual protocol. Also use it when the user gives command-style prompts such as `init context`, `read context`, or `store context`.
 
