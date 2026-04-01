@@ -1,5 +1,6 @@
 ---
 name: multi-client-collaboration
+version: 0.1.0
 description: "Use when work is split across multiple Codex CLI sessions, worktrees, or handoff-style threads and a shared manual coordination protocol is needed. This skill defines the default, simplest collaboration mode: one canonical CONTEXT.md in the main repo folder, with all clients reading and updating it for durable shared state."
 ---
 

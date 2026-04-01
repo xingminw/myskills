@@ -50,43 +50,33 @@ This repo includes a small CLI in `install.sh` for installing and managing skill
 ```bash
 ./install.sh list
 ./install.sh list --status draft
-./install.sh list-installed
-./install.sh check-consistency
+./install.sh list --installed
 ```
+
+Output is normalized to the same shape where possible:
+
+```text
+skill-name [status | install | source | vX.Y.Z]
+```
+
+Examples:
+
+- `paper-revision [testing | installed | in-myskills | v0.1.0]`
+- `some-external-skill [installed | external]`
 
 ### Show skill metadata
 
 ```bash
-./install.sh info paper-revision
+./install.sh show paper-revision
 ```
 
-### Show management status
-
-Compare repo-managed skills against the global install directory:
-
-```bash
-./install.sh status
-```
-
-### Check repo/global consistency
+### Show repo/global status
 
 Compare the repo copy and the installed global copy of a skill using `name` and `version` from `SKILL.md` frontmatter:
 
 ```bash
-./install.sh check-consistency
-./install.sh check-consistency paper-revision
-```
-
-### Validate the repo
-
-Checks that:
-
-- every skill folder contains `SKILL.md`
-- every skill folder has a registry entry
-- every registry entry points to a real path
-
-```bash
-./install.sh validate
+./install.sh status
+./install.sh status paper-revision
 ```
 
 ### Install skills locally
@@ -112,26 +102,15 @@ Install by status from `registry.yaml`:
 ./install.sh install --status draft
 ```
 
-### Sync a global skill back into the repo
+### Pull a global skill back into the repo
 
 If you edit an installed global skill first, you can pull that version back into this repo:
 
 ```bash
-./install.sh sync-from-global paper-revision
+./install.sh pull paper-revision
 ```
 
 This replaces the repo copy at the path defined in `registry.yaml` with the currently installed global copy from `~/.codex/skills/<skill-id>`.
-
-### View installed global skills
-
-This reads the actual global Codex skills directory `~/.codex/skills` and labels each installed skill as:
-
-- `in-myskills`: known in this repo's `registry.yaml`
-- `external`: installed globally but not tracked by this repo
-
-```bash
-./install.sh list-installed
-```
 
 ### Uninstall installed skills
 
