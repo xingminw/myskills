@@ -2,7 +2,8 @@ skills:
   - id: paper-revision
     title: Paper Revision
     tags: [writing, paper, editing, research]
-    status: draft
+    status: testing
+    version: 0.1.0
     summary: Revise academic papers for clarity, structure, and reviewer response.
     path: skills/paper-revision
     owner: mtl-omen-desktop
@@ -10,7 +11,7 @@ skills:
   - id: multi-client-collaboration
     title: Multi-Client Collaboration
     tags: [coordination, worktree, handoff, context]
-    status: tested
+    status: archived
     summary: Coordinate shared work across Codex sessions and worktrees using one canonical CONTEXT.md.
     path: skills/archived-multi-client-collaboration
     owner: mtl-omen-desktop

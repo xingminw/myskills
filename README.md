@@ -24,7 +24,8 @@ install.sh               Install one skill or all skills into Codex
 - Put detailed notes in `references/`.
 - Put reusable code in `scripts/`.
 - Put templates and files used in outputs in `assets/`.
-- Track status in `registry.yaml`: `draft`, `tested`, `stable`, `deprecated`.
+- Track status in `registry.yaml`: `draft`, `testing`, `stable`, `archived`.
+- Add `version` in `registry.yaml` when you want to compare repo and global skill releases.
 
 ## Create a New Skill
 
@@ -50,6 +51,7 @@ This repo includes a small CLI in `install.sh` for installing and managing skill
 ./install.sh list
 ./install.sh list --status draft
 ./install.sh list-installed
+./install.sh check-consistency
 ```
 
 ### Show skill metadata
@@ -64,6 +66,15 @@ Compare repo-managed skills against the global install directory:
 
 ```bash
 ./install.sh status
+```
+
+### Check repo/global consistency
+
+Compare the repo copy and the installed global copy of a skill using `name` and `version` from `SKILL.md` frontmatter:
+
+```bash
+./install.sh check-consistency
+./install.sh check-consistency paper-revision
 ```
 
 ### Validate the repo
@@ -101,6 +112,16 @@ Install by status from `registry.yaml`:
 ./install.sh install --status draft
 ```
 
+### Sync a global skill back into the repo
+
+If you edit an installed global skill first, you can pull that version back into this repo:
+
+```bash
+./install.sh sync-from-global paper-revision
+```
+
+This replaces the repo copy at the path defined in `registry.yaml` with the currently installed global copy from `~/.codex/skills/<skill-id>`.
+
 ### View installed global skills
 
 This reads the actual global Codex skills directory `~/.codex/skills` and labels each installed skill as:
@@ -137,6 +158,6 @@ Remove all globally installed skills that are managed by this repo:
 ## Suggested Workflow
 
 - Draft new skills quickly.
-- Promote them to `tested` after a few successful uses.
+- Promote them to `testing` while you are still exercising them in real tasks.
 - Promote them to `stable` only when the trigger description and workflow hold up consistently.
-- Archive old ideas by marking them `deprecated` instead of deleting them immediately.
+- Archive old ideas by marking them `archived` instead of deleting them immediately.

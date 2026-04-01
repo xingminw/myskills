@@ -14,10 +14,12 @@ usage() {
 Usage:
   ./install.sh list [--status STATUS]
   ./install.sh list-installed
+  ./install.sh check-consistency [skill...]
   ./install.sh info <skill>
   ./install.sh status
   ./install.sh validate
   ./install.sh install [--all] [--status STATUS] [skill...]
+  ./install.sh sync-from-global <skill>
   ./install.sh uninstall [skill...]
   ./install.sh uninstall --all-managed
   ./install.sh help
@@ -26,12 +28,15 @@ Examples:
   ./install.sh list
   ./install.sh list --status draft
   ./install.sh list-installed
+  ./install.sh check-consistency
+  ./install.sh check-consistency paper-revision
   ./install.sh info paper-revision
   ./install.sh status
   ./install.sh validate
   ./install.sh install paper-revision
   ./install.sh install --status stable
   ./install.sh install --all
+  ./install.sh sync-from-global paper-revision
   ./install.sh uninstall paper-revision
   ./install.sh uninstall --all-managed
 
@@ -98,6 +103,27 @@ registry_ids_by_status() {
   ' "$REGISTRY_FILE"
 }
 
+skill_field_from_file() {
+  local file_path="$1"
+  local field_name="$2"
+  awk -v field="$field_name" '
+    BEGIN { in_frontmatter = 0; seen_start = 0 }
+    $0 == "---" {
+      if (!seen_start) {
+        seen_start = 1
+        in_frontmatter = 1
+        next
+      }
+      if (in_frontmatter) exit
+    }
+    in_frontmatter && $1 == field ":" {
+      sub("^[^:]+:[[:space:]]*", "", $0)
+      print $0
+      exit
+    }
+  ' "$file_path"
+}
+
 install_one() {
   local skill_name="$1"
   local registry_path
@@ -132,12 +158,44 @@ installed_skill_ids() {
   done
 }
 
+sync_from_global() {
+  local skill_name="$1"
+  local registry_path
+  local repo_path
+  local global_path="$TARGET_DIR/$skill_name"
+
+  registry_path="$(registry_get_field "$skill_name" "path")"
+
+  if [[ -z "$registry_path" ]]; then
+    echo "Skill not found in registry: $skill_name" >&2
+    exit 1
+  fi
+
+  if [[ ! -d "$global_path" ]]; then
+    echo "Installed global skill not found: $global_path" >&2
+    exit 1
+  fi
+
+  if [[ ! -f "$global_path/SKILL.md" ]]; then
+    echo "Installed global skill is missing SKILL.md: $global_path" >&2
+    exit 1
+  fi
+
+  repo_path="$REPO_DIR/$registry_path"
+
+  rm -rf "$repo_path"
+  mkdir -p "$(dirname "$repo_path")"
+  cp -r "$global_path" "$repo_path"
+  echo "Synced $skill_name from $global_path -> $repo_path"
+}
+
 list_skills() {
   local status_filter="${1:-}"
   local skill_name
   local title
   local status
   local summary
+  local version
 
   for skill_name in $(registry_ids); do
     if [[ -n "$status_filter" ]]; then
@@ -149,7 +207,12 @@ list_skills() {
 
     title="$(registry_get_field "$skill_name" "title")"
     summary="$(registry_get_field "$skill_name" "summary")"
-    printf '%s [%s] - %s\n' "$skill_name" "$status" "$title"
+    version="$(registry_get_field "$skill_name" "version")"
+    if [[ -n "$version" ]]; then
+      printf '%s [%s] (v%s) - %s\n' "$skill_name" "$status" "$version" "$title"
+    else
+      printf '%s [%s] - %s\n' "$skill_name" "$status" "$title"
+    fi
     printf '  %s\n' "$summary"
   done
 }
@@ -181,6 +244,82 @@ show_info() {
   fi
 
   registry_print_block "$skill_name"
+}
+
+check_one_consistency() {
+  local skill_name="$1"
+  local registry_path
+  local repo_path
+  local global_path
+  local repo_name
+  local global_name
+  local repo_version
+  local global_version
+  local ok=1
+
+  registry_path="$(registry_get_field "$skill_name" "path")"
+
+  if [[ -z "$registry_path" ]]; then
+    echo "$skill_name [error] not found in registry"
+    return 1
+  fi
+
+  repo_path="$REPO_DIR/$registry_path/SKILL.md"
+  global_path="$TARGET_DIR/$skill_name/SKILL.md"
+
+  if [[ ! -f "$repo_path" ]]; then
+    echo "$skill_name [error] repo SKILL.md missing"
+    return 1
+  fi
+
+  if [[ ! -f "$global_path" ]]; then
+    echo "$skill_name [not-installed] no global skill to compare"
+    return 0
+  fi
+
+  repo_name="$(skill_field_from_file "$repo_path" "name")"
+  global_name="$(skill_field_from_file "$global_path" "name")"
+  repo_version="$(skill_field_from_file "$repo_path" "version")"
+  global_version="$(skill_field_from_file "$global_path" "version")"
+
+  if [[ "$repo_name" != "$global_name" ]]; then
+    ok=0
+  fi
+
+  if [[ "$repo_version" != "$global_version" ]]; then
+    ok=0
+  fi
+
+  if [[ "$ok" -eq 1 ]]; then
+    echo "$skill_name [consistent] name=$repo_name version=${repo_version:-none}"
+  else
+    echo "$skill_name [mismatch] repo(name=$repo_name version=${repo_version:-none}) global(name=$global_name version=${global_version:-none})"
+    return 1
+  fi
+}
+
+check_consistency() {
+  local failed=0
+  local skill_name
+
+  if [[ $# -gt 0 ]]; then
+    for skill_name in "$@"; do
+      if ! check_one_consistency "$skill_name"; then
+        failed=1
+      fi
+    done
+  else
+    while IFS= read -r skill_name; do
+      [[ -n "$skill_name" ]] || continue
+      if ! check_one_consistency "$skill_name"; then
+        failed=1
+      fi
+    done < <(registry_ids)
+  fi
+
+  if [[ "$failed" -ne 0 ]]; then
+    exit 1
+  fi
 }
 
 show_status() {
@@ -314,6 +453,10 @@ main() {
     list-installed)
       list_installed_skills
       ;;
+    check-consistency)
+      shift
+      check_consistency "$@"
+      ;;
     info)
       shift
       [[ $# -ge 1 ]] || { echo "Missing skill name." >&2; exit 1; }
@@ -346,6 +489,11 @@ main() {
       for skill_name in "$@"; do
         install_one "$skill_name"
       done
+      ;;
+    sync-from-global)
+      shift
+      [[ $# -ge 1 ]] || { echo "Missing skill name." >&2; exit 1; }
+      sync_from_global "$1"
       ;;
     uninstall)
       shift

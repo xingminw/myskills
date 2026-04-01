@@ -1,4 +1,0 @@
-version: 1
-display_name: Paper Revision
-short_description: Revise academic writing and reviewer responses.
-default_prompt: Revise this paper section for clarity, structure, and academic tone while preserving technical meaning.
