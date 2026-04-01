@@ -151,48 +151,49 @@ Logging style:
 
 ### Conventions
 
-#### Comment Naming Convention
+Use these rules whenever the response letter describes, quotes, or locates manuscript revisions:
 
-- Assign stable internal IDs to reviewer comments, such as `R1-C3`, `R2-C1`, or `AE-C2`.
-- If a reviewer has a general comment before numbered comments, label it as `C0`, for example `R1-C0`.
-- Use these IDs only for internal tracking and internal communication across manuscript edits, response checks, and log entries.
-- If one revision task addresses several closely related comments, list all relevant IDs together rather than inventing a new category.
-
-#### Internal Quote Naming Convention
-
-- When a response contains quoted manuscript revisions, assign stable internal quote IDs such as `R1-C3-Q1`, `R1-C3-Q2`, or `R2-C1-Q1`.
-- Use these IDs only for internal tracking and internal communication during response checking or cleanup.
-- Treat each quote as a separate object when verifying wording accuracy, location accuracy, and formatting consistency.
-
-#### Response And Manuscript Alignment Conventions
-
-Use these rules whenever the response letter quotes revised manuscript text:
-
-- Treat `main.tex` or the manuscript source as the wording source of truth.
-- Treat the generated PDF as the location source of truth for fixed rendered numbering and page placement.
-- Use one consistent quote-location format throughout the response letter, preferably `Page X, Section Y`.
-- Do not mix formats such as `Introduction` in one place and `Section 1` in another when both refer to manuscript locations.
-- After manuscript restructuring, re-check quote locations against the current rendered PDF rather than relying on older page or section numbers.
-- If the response presents a passage as revised or added, the corresponding quoted passage in the manuscript should contain visible revision markup somewhere within that quoted span.
-- Do not require the entire quoted paragraph to be revision-marked; unchanged surrounding context may remain unmarked.
-- Do not use manuscript `\ref{...}` labels inside `response.tex` when the response letter is compiled separately.
-- Replace cross-file references with rendered labels from the PDF, such as `Appendix B`, `Section 5.1`, or `Equation (4)`.
-- Bibliography citations are an exception to the cross-file-reference rule. When quoted manuscript text contains `\cite{...}` commands and the response letter can compile against the shared bibliography, preserve those citations rather than stripping them out.
-- Prefer quoting only the minimum revised passage needed to answer the reviewer comment.
-- Keep the response letter honest: quote only text that actually exists in the manuscript source.
-- Before editing the response letter, inspect the repository's existing response-letter conventions and follow them rather than inventing a new format.
-- Learn local conventions from the current source files, macros, and compiled outputs when available.
-- Do not rely on automatic cross-file numbering inside the response letter.
-- Write reviewer responses as self-contained arguments, not as placeholders followed by quotes.
-- Answer the reviewer’s actual concern directly and explicitly.
-- State your understanding of the issue, the reasoning behind the fix, and what changed in the manuscript.
-- Use quoted revised text as supporting evidence, not as a substitute for explanation.
-- Integrate quotes organically into the response flow instead of mechanically appending them at the end.
-- Keep the response professional, concise, and specific to the reviewer’s comment.
-- Make sure the logic of the response corresponds clearly to the logic of the comment.
-- Treat the response letter as an argument, not as an edit log.
-- Resolve the reviewer’s concern in prose before using manuscript quotes as evidence.
-- Separate the reviewer’s exact wording from the actual issue that needs to be resolved in the paper.
-- If different parts of the response rely on different evidence, place each quote immediately after the point it supports rather than bundling all quotes at the end.
-- For simple typo fixes or pure wording corrections, a direct response without quotation may be better than forced quoting.
-- When comparing with prior work, explain the comparison at the level of the actual inference target, uncertainty target, assumption set, or evidence, rather than relying only on broad labels.
+- Internal tracking conventions:
+  - Assign stable internal IDs to reviewer comments, such as `R1-C3`, `R2-C1`, or `AE-C2`.
+  - If a reviewer has a general comment before numbered comments, label it as `C0`, for example `R1-C0`.
+  - When a response contains quoted manuscript revisions, assign stable internal quote IDs such as `R1-C3-Q1`, `R1-C3-Q2`, or `R2-C1-Q1`.
+  - Use these IDs only for internal tracking and internal communication across manuscript edits, response checks, cleanup, and log entries.
+  - If one revision task addresses several closely related comments, list all relevant IDs together rather than inventing a new category.
+  - Treat each quote as a separate object when verifying wording accuracy, location accuracy, and formatting consistency.
+- Source-of-truth conventions:
+  - Treat `main.tex` or the manuscript source as the wording source of truth.
+  - Treat the generated PDF as the location source of truth for fixed rendered numbering and page placement.
+  - After manuscript restructuring, re-check quote locations against the current rendered PDF rather than relying on older page or section numbers.
+  - Keep the response letter honest: quote only text that actually exists in the manuscript source.
+- Quote and alignment conventions:
+  - Quote-location conventions:
+    - Use one consistent quote-location format throughout the response letter, preferably `Page X, Section Y`.
+    - Do not mix formats such as `Introduction` in one place and `Section 1` in another when both refer to manuscript locations.
+    - Do not use manuscript `\ref{...}` labels inside `response.tex` when the response letter is compiled separately.
+    - Replace cross-file references with rendered labels from the PDF, such as `Appendix B`, `Section 5.1`, or `Equation (4)`.
+    - Bibliography citations are an exception to the cross-file-reference rule. When quoted manuscript text contains `\cite{...}` commands and the response letter can compile against the shared bibliography, preserve those citations rather than stripping them out.
+  - Revision-marking conventions:
+    - If the response presents a passage as revised or added, the corresponding quoted passage in the manuscript should contain visible revision markup somewhere within that quoted span.
+    - Do not require the entire quoted paragraph to be revision-marked; unchanged surrounding context may remain unmarked.
+  - Use-of-quote conventions:
+    - Prefer quoting only the minimum revised passage needed to answer the reviewer comment.
+    - Use quoted revised text as supporting evidence, not as a substitute for explanation.
+    - Integrate quotes organically into the response flow instead of mechanically appending them at the end.
+- Response-writing conventions:
+  - Response-argument conventions:
+    - Write reviewer responses as self-contained arguments, not as placeholders followed by quotes.
+    - Answer the reviewer’s actual concern directly and explicitly.
+    - State your understanding of the issue, the reasoning behind the fix, and what changed in the manuscript.
+    - Make sure the logic of the response corresponds clearly to the logic of the comment.
+    - Separate the reviewer’s exact wording from the actual issue that needs to be resolved in the paper.
+    - Resolve the reviewer’s concern in prose before using manuscript quotes as evidence.
+    - Keep the response professional, concise, and specific to the reviewer’s comment.
+    - Treat the response letter as an argument, not as an edit log.
+  - Quote-placement conventions:
+    - If different parts of the response rely on different evidence, place each quote immediately after the point it supports rather than bundling all quotes at the end.
+  - Special-case conventions:
+    - For simple typo fixes or pure wording corrections, a direct response without quotation may be better than forced quoting.
+    - When comparing with prior work, explain the comparison at the level of the actual inference target, uncertainty target, assumption set, or evidence, rather than relying only on broad labels.
+    - Before editing the response letter, inspect the repository's existing response-letter conventions and follow them rather than inventing a new format.
+    - Learn local conventions from the current source files, macros, and compiled outputs when available.
+    - Do not rely on automatic cross-file numbering inside the response letter.
