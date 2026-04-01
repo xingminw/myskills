@@ -161,9 +161,9 @@ list_installed_skills() {
   for installed_name in $(installed_skill_ids); do
     count=1
     if registry_has_skill "$installed_name"; then
-      printf '%s [managed]\n' "$installed_name"
+      printf '%s [in-myskills]\n' "$installed_name"
     else
-      printf '%s [unmanaged]\n' "$installed_name"
+      printf '%s [external]\n' "$installed_name"
     fi
   done
 

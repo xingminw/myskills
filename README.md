@@ -105,8 +105,8 @@ Install by status from `registry.yaml`:
 
 This reads the actual global Codex skills directory `~/.codex/skills` and labels each installed skill as:
 
-- `managed`: known in this repo's `registry.yaml`
-- `unmanaged`: installed globally but not tracked by this repo
+- `in-myskills`: known in this repo's `registry.yaml`
+- `external`: installed globally but not tracked by this repo
 
 ```bash
 ./install.sh list-installed
