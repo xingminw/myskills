@@ -187,6 +187,9 @@ Use these rules whenever the response letter describes, quotes, or locates manus
     - Make sure the logic of the response corresponds clearly to the logic of the comment.
     - Separate the reviewer’s exact wording from the actual issue that needs to be resolved in the paper.
     - Resolve the reviewer’s concern in prose before using manuscript quotes as evidence.
+    - Avoid formulaic politeness or agreement filler that does not help resolve the comment.
+    - Do not open with empty phrases such as "We agree with the reviewer" or "We thank the reviewer for the important comments" unless they serve a specific rhetorical purpose.
+    - Prefer opening directly with the substantive answer, clarification, limitation, or manuscript change.
     - Keep the response professional, concise, and specific to the reviewer’s comment.
     - Treat the response letter as an argument, not as an edit log.
   - Quote-placement conventions:
