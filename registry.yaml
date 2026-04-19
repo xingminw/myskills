@@ -1,4 +1,13 @@
 skills:
+  - id: drawio-workflows
+    title: Draw.io Workflows
+    tags: [drawio, diagrams, figures, export]
+    status: draft
+    version: 0.1.0
+    summary: Export draw.io figures to PDF or PNG, isolate a figure from a master canvas, and validate outputs with lightweight visual comparison.
+    path: skills/drawio-workflows
+    owner: mtl-omen-desktop
+    last_updated: 2026-04-19
   - id: paper-revision
     title: Paper Revision
     tags: [writing, paper, editing, research]
