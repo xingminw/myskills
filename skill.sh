@@ -12,31 +12,31 @@ mkdir -p "$TARGET_DIR"
 usage() {
   cat <<'EOF'
 Usage:
-  ./install.sh list [--status STATUS] [--installed]
-  ./install.sh show <skill>
-  ./install.sh status [skill...]
-  ./install.sh install [--all] [--status STATUS] [skill...]
-  ./install.sh pull <skill>
-  ./install.sh uninstall [skill...]
-  ./install.sh uninstall --all-managed
-  ./install.sh help
+  ./skill.sh list [--status STATUS] [--installed]
+  ./skill.sh show <skill>
+  ./skill.sh status [skill...]
+  ./skill.sh install [--all] [--status STATUS] [skill...]
+  ./skill.sh pull <skill>
+  ./skill.sh uninstall [skill...]
+  ./skill.sh uninstall --all-managed
+  ./skill.sh help
 
 Examples:
-  ./install.sh list
-  ./install.sh list --status draft
-  ./install.sh list --installed
-  ./install.sh show paper-revision
-  ./install.sh status
-  ./install.sh status paper-revision
-  ./install.sh install paper-revision
-  ./install.sh install --status stable
-  ./install.sh install --all
-  ./install.sh pull paper-revision
-  ./install.sh uninstall paper-revision
-  ./install.sh uninstall --all-managed
+  ./skill.sh list
+  ./skill.sh list --status draft
+  ./skill.sh list --installed
+  ./skill.sh show paper-revision
+  ./skill.sh status
+  ./skill.sh status paper-revision
+  ./skill.sh install paper-revision
+  ./skill.sh install --status stable
+  ./skill.sh install --all
+  ./skill.sh pull paper-revision
+  ./skill.sh uninstall paper-revision
+  ./skill.sh uninstall --all-managed
 
 Notes:
-  - Running with no arguments defaults to: ./install.sh install --all
+  - Running with no arguments defaults to: ./skill.sh install --all
   - Install overwrites the target skill directory in ~/.codex/skills
 EOF
 }

@@ -13,7 +13,7 @@ This repository serves two purposes:
 skills/                  Real skills you use
 templates/skill-template Starting point for new skills
 registry.yaml            Inventory of all skills
-install.sh               Install one skill or all skills into Codex
+skill.sh                 Manage skills in this repo and install them into Codex
 ```
 
 ## Conventions
@@ -43,14 +43,14 @@ Then update:
 
 ## Skill CLI
 
-This repo includes a small CLI in `install.sh` for installing and managing skills.
+This repo includes a small CLI in `skill.sh` for installing and managing skills.
 
 ### List skills
 
 ```bash
-./install.sh list
-./install.sh list --status draft
-./install.sh list --installed
+./skill.sh list
+./skill.sh list --status draft
+./skill.sh list --installed
 ```
 
 Output is normalized to the same shape where possible:
@@ -67,7 +67,7 @@ Examples:
 ### Show skill metadata
 
 ```bash
-./install.sh show paper-revision
+./skill.sh show paper-revision
 ```
 
 ### Show repo/global status
@@ -75,8 +75,8 @@ Examples:
 Compare the repo copy and the installed global copy of a skill using `name` and `version` from `SKILL.md` frontmatter:
 
 ```bash
-./install.sh status
-./install.sh status paper-revision
+./skill.sh status
+./skill.sh status paper-revision
 ```
 
 ### Install skills locally
@@ -84,22 +84,22 @@ Compare the repo copy and the installed global copy of a skill using `name` and 
 Install all registered skills into `~/.codex/skills`:
 
 ```bash
-./install.sh
-./install.sh install --all
+./skill.sh
+./skill.sh install --all
 ```
 
 Install one or more named skills:
 
 ```bash
-./install.sh install paper-revision
-./install.sh install paper-revision slides
+./skill.sh install paper-revision
+./skill.sh install paper-revision slides
 ```
 
 Install by status from `registry.yaml`:
 
 ```bash
-./install.sh install --status stable
-./install.sh install --status draft
+./skill.sh install --status stable
+./skill.sh install --status draft
 ```
 
 ### Pull a global skill back into the repo
@@ -107,7 +107,7 @@ Install by status from `registry.yaml`:
 If you edit an installed global skill first, you can pull that version back into this repo:
 
 ```bash
-./install.sh pull paper-revision
+./skill.sh pull paper-revision
 ```
 
 This replaces the repo copy at the path defined in `registry.yaml` with the currently installed global copy from `~/.codex/skills/<skill-id>`.
@@ -117,19 +117,19 @@ This replaces the repo copy at the path defined in `registry.yaml` with the curr
 Remove one or more installed skills from `~/.codex/skills`:
 
 ```bash
-./install.sh uninstall paper-revision
-./install.sh uninstall paper-revision some-other-skill
+./skill.sh uninstall paper-revision
+./skill.sh uninstall paper-revision some-other-skill
 ```
 
 Remove all globally installed skills that are managed by this repo:
 
 ```bash
-./install.sh uninstall --all-managed
+./skill.sh uninstall --all-managed
 ```
 
 ### Notes
 
-- Running `./install.sh` with no arguments defaults to installing all registered skills.
+- Running `./skill.sh` with no arguments defaults to installing all registered skills.
 - Install is overwrite-based for the target skill folder in `~/.codex/skills`.
 - Uninstall removes folders from `~/.codex/skills`.
 - `registry.yaml` is the inventory used for listing, info, and status-based install.
