@@ -1,4 +1,0 @@
-version: 1
-display_name: Draw.io Workflows
-short_description: Export, isolate, and validate draw.io figures with a consistent workflow.
-default_prompt: Help me export, isolate, or validate draw.io figures using the repository workflow.
